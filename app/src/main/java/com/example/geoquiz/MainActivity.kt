@@ -18,6 +18,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.geoquiz.ui.theme.GeoQuizTheme
+import kotlinx.coroutines.delay
 
 data class Question(
     val questionText: String,
@@ -82,6 +84,7 @@ fun DemoScreen(modifier: Modifier = Modifier) {
     var currentIndex by remember { mutableIntStateOf(0) }
     var answered by remember { mutableStateOf(false) }
     var correctAnswers by remember { mutableIntStateOf(0) }
+    var quizFinished by remember { mutableStateOf(false) }
 
     val currentQuestion = questions[currentIndex]
     val isLastQuestion = currentIndex == questions.size - 1
@@ -102,6 +105,18 @@ fun DemoScreen(modifier: Modifier = Modifier) {
         if (currentIndex < questions.size - 1) {
             currentIndex++
             answered = false
+        }
+    }
+
+    LaunchedEffect(answered, isLastQuestion) {
+        if (answered && isLastQuestion && !quizFinished) {
+            quizFinished = true
+            delay(1500)
+            Toast.makeText(
+                context,
+                "Тест завершён! Правильных ответов: $correctAnswers из ${questions.size}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
