@@ -84,6 +84,7 @@ fun DemoScreen(modifier: Modifier = Modifier) {
     var correctAnswers by remember { mutableIntStateOf(0) }
 
     val currentQuestion = questions[currentIndex]
+    val isLastQuestion = currentIndex == questions.size - 1
 
     fun checkAnswer(userAnswer: Boolean) {
         if (!answered) {
@@ -94,6 +95,13 @@ fun DemoScreen(modifier: Modifier = Modifier) {
             } else {
                 Toast.makeText(context, "Неправильно!", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun nextQuestion() {
+        if (currentIndex < questions.size - 1) {
+            currentIndex++
+            answered = false
         }
     }
 
@@ -148,6 +156,21 @@ fun DemoScreen(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF27A6F5)
             )
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        if (answered && !isLastQuestion) {
+            Button(
+                onClick = { nextQuestion() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4CAF50),
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("NEXT", fontSize = 18.sp)
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
